@@ -12,8 +12,8 @@ nunjucks.configure('views',{
     express:app,
 })
 
-app.use(express.static('public')); // app.use를 무시하겠다. localhost:3000/css
-app.use(express.static('images')); // app.use를 무시하겠다.
+app.use(express.static('public')); 
+app.use(express.static('images'));  
 app.use(express.static('uploads'));
 app.use(cors());
 app.use(session({
@@ -21,13 +21,13 @@ app.use(session({
     resave:false,
     saveUninitialized:true,
     cookie:{
-        httpOnly:true,// js 코드로 쿠키를 가져오지 못하게
-        secure:false //https 에서만 가져오도록 할 것인가?
+        httpOnly:true,           // js 코드로 쿠키를 가져오지 못하게
+        secure:false             //https 에서만 가져오도록 할 것인가?
     }
 }))
 app.use(bodyParser.urlencoded({extended:false}));
 
-sequelize.sync({ force:false, })
+sequelize.sync({ force:false,})
 .then(()=>{
     console.log('접속 성공')
 })

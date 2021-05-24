@@ -1,46 +1,116 @@
 const express = require('express');
+const nunjucks = require('nunjucks');
+const axios = require('axios');
+const qs = require('qs');
 const session = require('express-session');
-const passport = require('passport')
-const cookieParser = require('cookie-parser');
-const passportConfig = require('./passport/index')
 const app = express();
 
-/*지금 미들웨어를 만들고 있는거다*/ 
-
-app.use((req,res,next)=>{
-    req.ingoo = 'ingoo?~'
-    next();
-})
-
-
-// app.use 미들웨어에 session값을 설정해서 req.session 사용할수 있게
 app.use(session({
-    secret:'sdfsdfsdfqwqq',
-}));
+    secret : 'aaa',
+    resave : false,
+    secure : false,
+    saveUninitialized: false,
+}))
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.get('/',(req,res)=>{
-    console.log(req.session)
-    console.log('aa')
-    res.send(`hello world ${req.ingoo}`);
-})
-
-app.get('/user',(req,res)=>{
-    res.send(`hello world ${req.ingoo}`);
-})
-
-app.get('/board',(req,res)=>{
-    res.send(`hello world ${req.ingoo}`);
-})
-
-
-
-app.get('/',(req,res)=>{
-    res.send(`hello world ${req.ingoo}`);
+app.set('view engine','html');
+nunjucks.configure('views',{
+    express:app,
 });
+
+const kakao = {
+    clientID : "50bbb5205dc8fcc9c2611542015a54d5",
+    clientSecret : "S8oRhiZCvxEOQWCmq0AMBM71g5rxZsw8",
+    redirectUri : "http://localhost:3000/auth/kakao/callback"
+}
+
+app.get('/',(req,res)=>{
+    res.render('./index.html');
+});
+
+app.get('/auth/kakao',(req,res)=>{
+    const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?
+    			client_id=${kakao.clientID}
+                        &redirect_uri=${kakao.redirectUri}
+                        &response_type=code
+                        &scope=profile,account_email`;
+                        
+    res.redirect(kakaoAuthURL);
+})
+
+const kakao = {
+    clientID : "50bbb5205dc8fcc9c2611542015a54d5",
+    clientSecret : "S8oRhiZCvxEOQWCmq0AMBM71g5rxZsw8",
+    redirectUri : "http://localhost:3000/auth/kakao/callback"
+}
+
+app.get('/',(req,res)=>{
+    res.render('./index.html');
+});
+
+app.get('/auth/kakao',(req,res)=>{
+    const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?
+    			client_id=${kakao.clientID}
+                        &redirect_uri=${kakao.redirectUri}
+                        &response_type=code
+                        &scope=profile,account_email`;
+                        
+    res.redirect(kakaoAuthURL);
+})
+
+const kakao = {
+    clientID : "50bbb5205dc8fcc9c2611542015a54d5",
+    clientSecret : "S8oRhiZCvxEOQWCmq0AMBM71g5rxZsw8",
+    redirectUri : "http://localhost:3000/auth/kakao/callback"
+}
+
+app.get('/',(req,res)=>{
+    res.render('./index.html');
+});
+
+app.get('/auth/kakao',(req,res)=>{
+    const kakaoAuthURL = `https://kauth.kakao.com/oauth/authorize?
+    			client_id=${kakao.clientID}
+                        &redirect_uri=${kakao.redirectUri}
+                        &response_type=code
+                        &scope=profile,account_email`;
+                        
+    res.redirect(kakaoAuthURL);
+})
+
+app.get('/auth/info',(req,res)=>{
+    let {nickname,profile_image} = req.session.kakao.properties
+    res.render('./info.html',{
+        nickname,
+        profile_image
+    })
+})
+  
+
+
+/////////////////////////////////////////////////////
+const authData = {
+    ...token.data, //깊은복사
+    ...user.data,  //깊은복사
+}
+
+req.session.authData = {
+    ["kakao"]:authData,
+}
+
+console.log(req.session);
+
+req.session.authData
+
+
+
+////////////////////////////////////////////////////
+
+
+
 
 app.listen(3000,()=>{
-    console.log('server start port 3000');
+    console.log('server 3000');
 });
+
+
+
